@@ -1,4 +1,5 @@
-﻿using  Ecommerce.Core.Model;
+﻿using  Ecommerce.Core.Model; 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace Ecommerce.Core.Interfaces
     {
       
         Task<IEnumerable< ProductModel>> ViewAllProductsAsync();
- 
+        Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected);
+        Task<int> DeleteProductAsync(int IDProduct);
 
     }
 }

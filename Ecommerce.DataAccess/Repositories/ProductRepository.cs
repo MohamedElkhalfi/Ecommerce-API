@@ -22,9 +22,20 @@ namespace Ecommerce.DataAccess.Repositories
             _Context = Context;
         }
 
-        public Task<int> DeleteProductAsync(int IDProduct)
+        public async Task<int> DeleteProductAsync(int IDProduct)
         {
-            throw new NotImplementedException();
+            var getProductByIdAndBySelectedQuery = _Context.Product.SingleOrDefault(op => op.ID.Equals(IDProduct));
+
+            var result = 0;
+
+            if (getProductByIdAndBySelectedQuery != null)
+            {
+                _Context.Remove(getProductByIdAndBySelectedQuery);
+                result = await _Context.SaveChangesAsync();
+            }
+           
+
+            return result;
         }
 
         public Task<ProductModel> FindByIdProductAsync(int IDProduct)
@@ -76,5 +87,47 @@ namespace Ecommerce.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected)
+        {
+            var getProductByIdAndBySelectedQuery = _Context.Product.SingleOrDefault(op => op.ID.Equals(IDProduct)); 
+                           
+            if(getProductByIdAndBySelectedQuery != null  )
+            {
+                getProductByIdAndBySelectedQuery.Is_Selected = Selected;
+                _Context.SaveChanges();
+            }
+            var  ProductQuery =  await getProductByID(  IDProduct);
+           
+            return ProductQuery;
+        }
+
+        public async Task<ProductModel> getProductByID(int IDProduct)
+        {
+            ProductModel ProductQuery = null;
+            //await _retryPolicy.ExecuteAsync(async () =>
+            //{
+            ProductQuery = await (_Context.Product
+                                 .Where(lm => lm.ID.Equals(IDProduct) )
+                                 .Select(op => new ProductModel
+                                 {
+                                     ID = op.ID,
+                                     CurrentPrice = op.CurrentPrice,
+                                     Description = op.Description,
+                                     Is_Available = op.Is_Available,
+                                     Is_Promotion = op.Is_Promotion,
+                                     Is_Selected = op.Is_Selected,
+                                     Name = op.Name,
+                                     PhotoName = op.PhotoName,
+                                     Quantity = op.Quantity
+                                 })).AsNoTracking()
+                                   .FirstOrDefaultAsync()
+                                   .ConfigureAwait(false);
+
+            //}).ConfigureAwait(false);
+            return ProductQuery;
+        }
+
+       
     }
 }

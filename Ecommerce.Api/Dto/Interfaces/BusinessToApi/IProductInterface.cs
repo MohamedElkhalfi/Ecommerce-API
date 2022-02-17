@@ -11,6 +11,9 @@ namespace Ecommerce.Api.Dto.Interfaces.BusinessToApi
    public interface IProductInterface
     {
         IEnumerable<ProductApi> ViewAllProductsMap( IEnumerable<ProductModel>  ProductService);
-         
+        ProductModel ApiToModelProductMap(ProductApi _ProductApi);
+        ProductApi ModelToApiProductMap(ProductModel _ProductModel);
+
+
     }
 }

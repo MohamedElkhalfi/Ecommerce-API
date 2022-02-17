@@ -15,6 +15,7 @@ using Ecommerce.Core.Model;
 using AutoMapper;
 using Ecommerce.Api.Model;
 using Ecommerce.Api.Dto.Interfaces.BusinessToApi;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -40,9 +41,9 @@ namespace Ecommerce.Api.Controllers
         /// </summary>
         /// <param name="agreementProduct"></param>
         /// <returns></returns>
-        [HttpPost("ViewAllProducts")]
-        //[Authorize(Policy = Scopes.COMMERCIAL_OFFER_DFC)]
-        [ProducesResponseType(typeof(IEnumerable<ProductModel>), (int)HttpStatusCode.OK)]
+        [HttpGet("ViewAllProducts")]
+        //[Authorize(Policy = "AllowAll")]
+        [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -54,11 +55,50 @@ namespace Ecommerce.Api.Controllers
             if (productResponse == null || !productResponse.Any())
             {
                 return NoContent();
-            }
-            IEnumerable<ProductModel> ProductService = productResponse;
-           var ProductMapped=  _ProductInterface.ViewAllProductsMap(ProductService);  
+            } 
+           var ProductMapped=  _ProductInterface.ViewAllProductsMap(productResponse);  
             return Ok(ProductMapped);
 
         }
-    }
+
+        /// <summary>
+        /// Cette méthode permet configurer une nouvelle offre commerciale
+        /// </summary>
+        /// <param name="agreementProduct"></param>
+        /// <returns></returns>
+        [HttpGet("UpdateProductSelected")]
+        //[Authorize(Policy = "AllowAll")]
+        [ProducesResponseType(typeof(ProductApi), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> UpdateProductSelected([Required, FromQuery] int idProduct, [Required, FromQuery] bool? selected)
+        {
+
+         
+             var Response = await _ProductService.UpdateProductSelected(idProduct, selected); 
+            if (Response == null )
+            {
+                return NoContent();
+            }
+            var ProductMapped = _ProductInterface.ModelToApiProductMap(Response); 
+            return Ok(ProductMapped);
+
+        }
+
+        [HttpDelete("DeleteProductAsync")] 
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteProductAsync([Required, FromQuery] int idProduct )
+        {
+            var result = await _ProductService.DeleteProductAsync(idProduct);
+            if (result <= 0)
+            {
+                return NotFound(idProduct);
+            }
+
+            return NoContent();
+        }
+
+        }
 }

@@ -18,6 +18,8 @@ namespace Ecommerce.Core.Interfaces
         Task<IEnumerable<ProductModel>> FindByNameProductAsync(string Name);
         Task<ProductModel> FindByIdProductAsync(int IDProduct);
         Task<ProductModel> FindBySelectedProductAsync(bool? IsSelected);
+        Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected);
+
 
     }
 }
