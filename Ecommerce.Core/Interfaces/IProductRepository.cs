@@ -10,15 +10,15 @@ namespace Ecommerce.Core.Interfaces
 {
     public interface IProductRepository
     {
-        Task<int> CreateProductAsync(ProductModel Product);
-        Task<int> UpdateProductAsync(int IDProduct, ProductModel Product);
-        Task<int> DeleteProductAsync(int IDProduct);
-        Task<IEnumerable< ProductModel>> ViewAllProductsAsync();
+        Task<int> CreateProductRepositoryAsync(ProductModel Product);
+        Task<int> UpdateProductRepositoryAsync(int IDProduct, ProductModel Product);
+        Task<int> DeleteProductRepositoryAsync(int IDProduct);
+        Task<IEnumerable< ProductModel>> ViewAllProductsRepositoryAsync();
 
-        Task<IEnumerable<ProductModel>> FindByNameProductAsync(string Name);
-        Task<ProductModel> FindByIdProductAsync(int IDProduct);
-        Task<ProductModel> FindBySelectedProductAsync(bool? IsSelected);
-        Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected);
+        Task<IEnumerable<ProductModel>> FindByNameProductRepositoryAsync(string Name);
+        Task<ProductModel> FindByIdProductRepositoryAsync(int IDProduct);
+        Task<ProductModel> FindBySelectedProductRepositoryAsync(bool? IsSelected);
+        Task<IEnumerable<ProductModel>> UpdateProductSelectedRepositoryAsync(int IDProduct, bool? Selected);
 
 
     }

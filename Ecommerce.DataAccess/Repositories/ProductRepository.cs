@@ -22,7 +22,7 @@ namespace Ecommerce.DataAccess.Repositories
             _Context = Context;
         }
 
-        public async Task<int> DeleteProductAsync(int IDProduct)
+        public async Task<int> DeleteProductRepositoryAsync(int IDProduct)
         {
             var getProductByIdAndBySelectedQuery = _Context.Product.SingleOrDefault(op => op.ID.Equals(IDProduct));
 
@@ -38,22 +38,43 @@ namespace Ecommerce.DataAccess.Repositories
             return result;
         }
 
-        public Task<ProductModel> FindByIdProductAsync(int IDProduct)
+        public Task<ProductModel> FindByIdProductRepositoryAsync(int IDProduct)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ProductModel>> FindByNameProductAsync(string Name)
+        public async Task<IEnumerable<ProductModel>> FindByNameProductRepositoryAsync(string Name)
+        {
+            IEnumerable<ProductModel> ProductQuery = null;
+            //await _retryPolicy.ExecuteAsync(async () =>
+            //{
+            ProductQuery = await (_Context.Product
+                                 .Where(lm => lm.Name.Contains(Name))
+                                 .Select(op => new ProductModel
+                                 {
+                                     ID = op.ID,
+                                     CurrentPrice = op.CurrentPrice,
+                                     Description = op.Description,
+                                     Is_Available = op.Is_Available,
+                                     Is_Promotion = op.Is_Promotion,
+                                     Is_Selected = op.Is_Selected,
+                                     Name = op.Name,
+                                     PhotoName = op.PhotoName,
+                                     Quantity = op.Quantity
+                                 })).AsNoTracking()
+                                   .ToListAsync()
+                                   .ConfigureAwait(false);
+
+            //}).ConfigureAwait(false);
+            return ProductQuery;
+        }
+
+        public Task<ProductModel> FindBySelectedProductRepositoryAsync(bool? IsSelected)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ProductModel> FindBySelectedProductAsync(bool? IsSelected)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<ProductModel>> ViewAllProductsAsync()
+        public async Task<IEnumerable<ProductModel>> ViewAllProductsRepositoryAsync()
         {
             IEnumerable<ProductModel> ProductQuery = null;
              //await _retryPolicy.ExecuteAsync(async () =>
@@ -78,17 +99,17 @@ namespace Ecommerce.DataAccess.Repositories
             return ProductQuery;
         }
 
-        public Task<int> CreateProductAsync(ProductModel Product)
+        public Task<int> CreateProductRepositoryAsync(ProductModel Product)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateProductAsync(int IDProduct, ProductModel Product)
+        public Task<int> UpdateProductRepositoryAsync(int IDProduct, ProductModel Product)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected)
+        public async Task<IEnumerable<ProductModel>> UpdateProductSelectedRepositoryAsync(int IDProduct, bool? Selected)
         {
             var getProductByIdAndBySelectedQuery = _Context.Product.SingleOrDefault(op => op.ID.Equals(IDProduct)); 
                            
@@ -102,9 +123,9 @@ namespace Ecommerce.DataAccess.Repositories
             return ProductQuery;
         }
 
-        public async Task<ProductModel> getProductByID(int IDProduct)
+        public async Task<IEnumerable<ProductModel>> getProductByID(int IDProduct)
         {
-            ProductModel ProductQuery = null;
+            IEnumerable < ProductModel> ProductQuery = null;
             //await _retryPolicy.ExecuteAsync(async () =>
             //{
             ProductQuery = await (_Context.Product
@@ -121,13 +142,13 @@ namespace Ecommerce.DataAccess.Repositories
                                      PhotoName = op.PhotoName,
                                      Quantity = op.Quantity
                                  })).AsNoTracking()
-                                   .FirstOrDefaultAsync()
+                                   .ToListAsync()
                                    .ConfigureAwait(false);
 
             //}).ConfigureAwait(false);
             return ProductQuery;
         }
 
-       
+     
     }
 }

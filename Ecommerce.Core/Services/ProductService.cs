@@ -18,22 +18,27 @@ namespace Ecommerce.Core.Services
 
 
 
-        public async Task<IEnumerable<ProductModel>> ViewAllProductsAsync()
+        public async Task<IEnumerable<ProductModel>> ViewAllProductsServiceAsync()
         {
-            return await _productRepository.ViewAllProductsAsync();
+            return await _productRepository.ViewAllProductsRepositoryAsync();
         }
 
 
 
-        public async Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected)
+        public async Task<IEnumerable<ProductModel>> UpdateProductSelectedServiceAsync(int IDProduct, bool? Selected)
         {
-            return await _productRepository.UpdateProductSelected(IDProduct, Selected);
+            return await _productRepository.UpdateProductSelectedRepositoryAsync(IDProduct, Selected);
 
         }
 
-        public async Task<int> DeleteProductAsync(int IDProduct)
+        public async Task<int> DeleteProductServiceAsync(int IDProduct)
         {
-            return await _productRepository.DeleteProductAsync(IDProduct);
+            return await _productRepository.DeleteProductRepositoryAsync(IDProduct);
+        }
+
+        public async Task<IEnumerable<ProductModel>> FindByNameProductServiceAsync(string Name)
+        {
+            return await _productRepository.FindByNameProductRepositoryAsync(Name);
         }
     }
 }

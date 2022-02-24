@@ -61,5 +61,45 @@ namespace Ecommerce.Api.Dto.Mapping
 
             return _ProductApi;
         }
+
+        public IEnumerable<ProductApi> UpdateProductSelectedModelToApiProductMap(IEnumerable<ProductModel> ProductService)
+        {
+            IList<ProductApi> ProductApiMap = new List<ProductApi>();
+            foreach (var pi in ProductService)
+            {
+                var _ProductApi = new ProductApi();
+                _ProductApi.id = pi.ID;
+                _ProductApi.name = pi.Name;
+                _ProductApi.description = pi.Description;
+                _ProductApi.available = pi.Is_Available;
+                _ProductApi.selected = pi.Is_Selected;
+                _ProductApi.photoName = pi.PhotoName;
+                _ProductApi.quantity = pi.Quantity;
+                _ProductApi.currentPrice = pi.CurrentPrice;
+                ProductApiMap.Add(_ProductApi);
+            }
+
+            return ProductApiMap;
+        }
+
+        public IEnumerable<ProductApi> FindByNameProductModelToApiProductMap(IEnumerable<ProductModel> ProductService)
+        {
+            IList<ProductApi> ProductApiMap = new List<ProductApi>();
+            foreach (var pi in ProductService)
+            {
+                var _ProductApi = new ProductApi();
+                _ProductApi.id = pi.ID;
+                _ProductApi.name = pi.Name;
+                _ProductApi.description = pi.Description;
+                _ProductApi.available = pi.Is_Available;
+                _ProductApi.selected = pi.Is_Selected;
+                _ProductApi.photoName = pi.PhotoName;
+                _ProductApi.quantity = pi.Quantity;
+                _ProductApi.currentPrice = pi.CurrentPrice;
+                ProductApiMap.Add(_ProductApi);
+            }
+
+            return ProductApiMap;
+        }
     }
 }

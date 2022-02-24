@@ -11,9 +11,10 @@ namespace Ecommerce.Core.Interfaces
     public interface IProductService
     {
       
-        Task<IEnumerable< ProductModel>> ViewAllProductsAsync();
-        Task<ProductModel> UpdateProductSelected(int IDProduct, bool? Selected);
-        Task<int> DeleteProductAsync(int IDProduct);
+        Task<IEnumerable< ProductModel>> ViewAllProductsServiceAsync();
+        Task<IEnumerable<ProductModel>> UpdateProductSelectedServiceAsync(int IDProduct, bool? Selected);
+        Task<int> DeleteProductServiceAsync(int IDProduct);
+        Task<IEnumerable<ProductModel>> FindByNameProductServiceAsync(string Name);
 
     }
 }
