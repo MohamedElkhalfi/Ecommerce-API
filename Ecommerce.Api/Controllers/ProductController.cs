@@ -8,8 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using  Ecommerce.Core.Exceptions.Constants.MessagesConstantes;
+using System.Threading.Tasks; 
 using Ecommerce.Core.Model;
 using AutoMapper;
 using Ecommerce.Api.Model;
@@ -96,7 +95,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         
-    
+        [HttpGet("FindProductsByName")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
@@ -131,17 +130,24 @@ namespace Ecommerce.Api.Controllers
 
         }
 
-        [HttpPost("CreateProducts")]
-        [ProducesResponseType(typeof(IEnumerable<ProductApi>), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> CreateProducts([FromBody] ProductApi productApi)
+        [HttpGet("FindProductsByIdAsync")]
+        //[Authorize(Policy = "AllowAll")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ProductApi), (int)HttpStatusCode.OK)]
+
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> FindProductsByIdAsync([Required, FromQuery] int ProductID)
         {
+            var Response = await _ProductService.FindByIdProductServiceAsync(ProductID);
+            if (Response == null)
+            {
+                return NoContent();
+            }
+            var ProductMapped = _ProductInterface.FindByIdProductModelToApiProductMap(Response);
 
-            var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
-
-            var result = await _ProductService.CreateProductServiceAsync(ProductModelMapped);
-            return Ok(result);
+            return Ok(ProductMapped);
 
         }
     }

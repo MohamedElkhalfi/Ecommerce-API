@@ -117,5 +117,23 @@ namespace Ecommerce.Api.Dto.Mapping
 
             return _ProductModel;
         }
+
+        public  ProductApi  FindByIdProductModelToApiProductMap( ProductModel  _ProductService)
+        {
+            var ProductApiMap = new  ProductApi();
+          
+                var _ProductApi = new ProductApi();
+                _ProductApi.id = _ProductService.ID;
+                _ProductApi.name = _ProductService.Name;
+                _ProductApi.description = _ProductService.Description;
+                _ProductApi.available = _ProductService.Is_Available;
+                _ProductApi.selected = _ProductService.Is_Selected;
+                _ProductApi.photoName = _ProductService.PhotoName;
+                _ProductApi.quantity = _ProductService.Quantity;
+                _ProductApi.currentPrice = _ProductService.CurrentPrice;
+              
+
+            return _ProductApi;
+        }
     }
 }
