@@ -14,8 +14,8 @@ namespace Ecommerce.Core.Interfaces
         Task<IEnumerable<ProductModel>> UpdateProductSelectedServiceAsync(int IDProduct, bool? Selected);
         Task<int> DeleteProductServiceAsync(int IDProduct);
         Task<IEnumerable<ProductModel>> FindByNameProductServiceAsync(string Name);
-        Task<int> CreateProductServiceAsync(ProductModel _ProductModel); 
-      
+        Task<int> CreateProductServiceAsync(ProductModel _ProductModel);
+        Task<ProductModel> FindByIdProductServiceAsync(int ProductID);
 
     }
 }

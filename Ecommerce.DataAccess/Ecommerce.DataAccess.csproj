@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="Migrations\" />
     <Folder Include="ModelCustom\" />
     <Folder Include="Transverse\" />
   </ItemGroup>

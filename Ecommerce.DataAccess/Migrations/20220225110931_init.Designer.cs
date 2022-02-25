@@ -10,34 +10,38 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20220204235105_Ecommerce12")]
-    partial class Ecommerce12
+    [Migration("20220225110931_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Ecommerce")
+                .UseIdentityColumns()
                 .HasAnnotation("EcommerceVersion", "1.1")
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Photo");
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -48,27 +52,33 @@ namespace Ecommerce.DataAccess.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<string>("Address")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(10)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(20)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(10)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Username")
                         .HasMaxLength(15)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("ID");
 
@@ -79,15 +89,18 @@ namespace Ecommerce.DataAccess.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(6, 2)");
+                        .HasColumnType("decimal(6,2)");
 
-                    b.Property<int?>("clientID");
+                    b.Property<int?>("clientID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -100,17 +113,20 @@ namespace Ecommerce.DataAccess.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
-                    b.Property<int?>("Order_ID");
+                    b.Property<int?>("Order_ID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(6, 2)");
+                        .HasColumnType("decimal(6,2)");
 
-                    b.Property<int?>("Product_ID");
+                    b.Property<int?>("Product_ID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(6, 2)");
+                        .HasColumnType("decimal(6,2)");
 
                     b.HasKey("ID");
 
@@ -123,33 +139,51 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.Product", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("CategoryID")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("CurrentPrice")
-                        .HasColumnType("decimal(6, 2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<bool?>("Is_Available")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool?>("Is_Promotion")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool?>("Is_Selected")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .HasMaxLength(20)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
-                    b.Property<string>("PhotoName");
+                    b.Property<string>("PhotoName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quantity");
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Product");
                 });
@@ -159,6 +193,8 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.DataAccess.Model.Client", "client")
                         .WithMany("Order_")
                         .HasForeignKey("clientID");
+
+                    b.Navigation("client");
                 });
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.OrderItem", b =>
@@ -170,15 +206,32 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasOne("Ecommerce.DataAccess.Model.Product", "Product_")
                         .WithMany()
                         .HasForeignKey("Product_ID");
+
+                    b.Navigation("Order_");
+
+                    b.Navigation("Product_");
                 });
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.Product", b =>
                 {
-                    b.HasOne("Ecommerce.DataAccess.Model.Category", "Category_")
+                    b.HasOne("Ecommerce.DataAccess.Model.Category", null)
                         .WithMany("Product_")
-                        .HasForeignKey("ID")
-                        .HasConstraintName("FK_Product_Category")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CategoryID");
+                });
+
+            modelBuilder.Entity("Ecommerce.DataAccess.Model.Category", b =>
+                {
+                    b.Navigation("Product_");
+                });
+
+            modelBuilder.Entity("Ecommerce.DataAccess.Model.Client", b =>
+                {
+                    b.Navigation("Order_");
+                });
+
+            modelBuilder.Entity("Ecommerce.DataAccess.Model.Order", b =>
+                {
+                    b.Navigation("OrderItem_");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,14 +11,14 @@ namespace Ecommerce.Core.Interfaces
     public interface IProductRepository
     {
         Task<int> CreateProductRepositoryAsync(ProductModel Product);
-        Task<int> UpdateProductRepositoryAsync(int IDProduct, ProductModel Product);
-        Task<int> DeleteProductRepositoryAsync(int IDProduct);
+        Task<int> UpdateProductRepositoryAsync(int ProductID, ProductModel Product);
+        Task<int> DeleteProductRepositoryAsync(int ProductID);
         Task<IEnumerable< ProductModel>> ViewAllProductsRepositoryAsync();
 
         Task<IEnumerable<ProductModel>> FindByNameProductRepositoryAsync(string Name);
-        Task<ProductModel> FindByIdProductRepositoryAsync(int IDProduct);
+        Task<ProductModel> FindByIdProductRepositoryAsync(int ProductID);
         Task<ProductModel> FindBySelectedProductRepositoryAsync(bool? IsSelected);
-        Task<IEnumerable<ProductModel>> UpdateProductSelectedRepositoryAsync(int IDProduct, bool? Selected);
+        Task<IEnumerable<ProductModel>> UpdateProductSelectedRepositoryAsync(int ProductID, bool? Selected);
 
 
     }

@@ -22,7 +22,7 @@ namespace Ecommerce.DataAccess.Model
         public bool? Is_Available { get; set; }
         public string PhotoName { get; set; }
         public decimal Quantity  { get; set; }
-        public virtual Category Category_ { get; set; }
+        //public virtual Category Category_ { get; set; }
 
 }
 }

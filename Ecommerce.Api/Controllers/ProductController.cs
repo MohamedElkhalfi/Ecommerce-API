@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using EX = Ecommerce.Core.Exceptions.Constants.MessagesConstantes;
+using  Ecommerce.Core.Exceptions.Constants.MessagesConstantes;
 using Ecommerce.Core.Model;
 using AutoMapper;
 using Ecommerce.Api.Model;
@@ -36,11 +36,7 @@ namespace Ecommerce.Api.Controllers
             _ProductInterface = productInterface;
         }
 
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="agreementProduct"></param>
-        /// <returns></returns>
+        
         [HttpGet("ViewAllProducts")]
         //[Authorize(Policy = "AllowAll")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
@@ -61,11 +57,7 @@ namespace Ecommerce.Api.Controllers
 
         }
 
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="agreementProduct"></param>
-        /// <returns></returns>
+ 
         [HttpGet("UpdateProductSelected")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -103,12 +95,8 @@ namespace Ecommerce.Api.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="agreementProduct"></param>
-        /// <returns></returns>
-        [HttpGet("FindProductsByName")]
+        
+    
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
@@ -143,5 +131,18 @@ namespace Ecommerce.Api.Controllers
 
         }
 
+        [HttpPost("CreateProducts")]
+        [ProducesResponseType(typeof(IEnumerable<ProductApi>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> CreateProducts([FromBody] ProductApi productApi)
+        {
+
+            var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
+
+            var result = await _ProductService.CreateProductServiceAsync(ProductModelMapped);
+            return Ok(result);
+
+        }
     }
 }

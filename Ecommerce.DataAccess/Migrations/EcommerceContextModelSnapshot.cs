@@ -11,7 +11,6 @@ namespace Ecommerce.DataAccess.Migrations
     [DbContext(typeof(EcommerceContext))]
     partial class EcommerceContextModelSnapshot : ModelSnapshot
     {
-        //Note important, the project has 2 verions EF, so use this command for migration EntityFrameworkCore\
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -140,10 +139,14 @@ namespace Ecommerce.DataAccess.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("CurrentPrice")
-                        .HasColumnType("decimal(6,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
@@ -174,9 +177,11 @@ namespace Ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(6,2)");
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Product");
                 });
@@ -207,14 +212,9 @@ namespace Ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.Product", b =>
                 {
-                    b.HasOne("Ecommerce.DataAccess.Model.Category", "Category_")
+                    b.HasOne("Ecommerce.DataAccess.Model.Category", null)
                         .WithMany("Product_")
-                        .HasForeignKey("ID")
-                        .HasConstraintName("FK_Product_Category")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category_");
+                        .HasForeignKey("CategoryID");
                 });
 
             modelBuilder.Entity("Ecommerce.DataAccess.Model.Category", b =>

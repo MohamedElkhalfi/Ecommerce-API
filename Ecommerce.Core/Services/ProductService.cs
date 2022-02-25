@@ -39,8 +39,13 @@ namespace Ecommerce.Core.Services
 
         public async Task<int> CreateProductServiceAsync(ProductModel _ProductModel)
         {
-         var result =    await _productRepository.CreateProductRepositoryAsync(_ProductModel);
-            return result;
+            return await _productRepository.CreateProductRepositoryAsync(_ProductModel);
+               
+        }
+
+        public async Task<ProductModel> FindByIdProductServiceAsync(int ProductID)
+        {
+            return await _productRepository.FindByIdProductRepositoryAsync(ProductID);
         }
     }
 }
