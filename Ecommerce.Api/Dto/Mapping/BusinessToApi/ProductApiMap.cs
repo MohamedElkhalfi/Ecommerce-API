@@ -101,5 +101,21 @@ namespace Ecommerce.Api.Dto.Mapping
 
             return ProductApiMap;
         }
+
+        public ProductModel CreateProduitProductApiToModelProductMap(ProductApi _ProductApi)
+        {
+            var _ProductModel = new ProductModel();
+            _ProductModel.ID = _ProductApi.id;
+            _ProductModel.Name = _ProductApi.name;
+            _ProductModel.Description = _ProductApi.description != null ? _ProductApi.description  : "";
+            _ProductModel.Is_Available = _ProductApi.available;
+            _ProductModel.Is_Selected = _ProductApi.selected;
+            _ProductModel.PhotoName = _ProductApi.photoName != null ? _ProductApi.photoName : "";
+            _ProductModel.Is_Promotion = _ProductApi.promotion != null ? _ProductApi.promotion : true;
+            _ProductModel.Quantity = _ProductApi.quantity;
+            _ProductModel.CurrentPrice = _ProductApi.currentPrice;
+
+            return _ProductModel;
+        }
     }
 }

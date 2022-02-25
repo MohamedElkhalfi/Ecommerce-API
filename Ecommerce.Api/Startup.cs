@@ -18,6 +18,8 @@ using Ecommerce.DataAccess.Repositories;
 using Ecommerce.Core.Services;
 using Ecommerce.Api.Dto.Interfaces.BusinessToApi;
 using Ecommerce.Api.Dto.Mapping;
+using Ecommerce.DataAccess.Dto.Mapping;
+using Ecommerce.DataAccess.Dto.Interfaces;
 
 namespace Ecommerce.Api
 {
@@ -45,7 +47,8 @@ namespace Ecommerce.Api
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductInterface, ProductApiMap>();
-            
+            services.AddScoped<IProductMapping, ProductMapping>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce.Api", Version = "v1" });

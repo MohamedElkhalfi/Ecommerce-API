@@ -28,7 +28,6 @@
     <ProjectReference Include="..\Ecommerce.DataAccess\Ecommerce.DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mapper\Interface\NewFolder\" />
     <Folder Include="Model\Ressources\" />
   </ItemGroup>
 </Project>

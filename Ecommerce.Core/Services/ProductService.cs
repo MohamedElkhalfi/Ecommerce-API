@@ -15,16 +15,12 @@ namespace Ecommerce.Core.Services
         {
             _productRepository = productRepository;
         }
-
-
-
+         
         public async Task<IEnumerable<ProductModel>> ViewAllProductsServiceAsync()
         {
             return await _productRepository.ViewAllProductsRepositoryAsync();
         }
-
-
-
+         
         public async Task<IEnumerable<ProductModel>> UpdateProductSelectedServiceAsync(int IDProduct, bool? Selected)
         {
             return await _productRepository.UpdateProductSelectedRepositoryAsync(IDProduct, Selected);
@@ -39,6 +35,12 @@ namespace Ecommerce.Core.Services
         public async Task<IEnumerable<ProductModel>> FindByNameProductServiceAsync(string Name)
         {
             return await _productRepository.FindByNameProductRepositoryAsync(Name);
+        }
+
+        public async Task<int> CreateProductServiceAsync(ProductModel _ProductModel)
+        {
+         var result =    await _productRepository.CreateProductRepositoryAsync(_ProductModel);
+            return result;
         }
     }
 }

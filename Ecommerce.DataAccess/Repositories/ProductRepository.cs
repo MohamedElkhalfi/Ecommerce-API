@@ -9,17 +9,20 @@ using Ecommerce.DataAccess.ConnexionDB;
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Core.Interfaces;
 using Ecommerce.Core.Model;
+using Ecommerce.DataAccess.Dto.Interfaces;
 
 namespace Ecommerce.DataAccess.Repositories
 {
     public class ProductRepository : IProductRepository
     {
         private EcommerceContext _Context { get; }
+        private IProductMapping _IProductMapping { get; }
         private readonly Polly.Retry.AsyncRetryPolicy _retryPolicy;
 
-        public ProductRepository(EcommerceContext Context)
+        public ProductRepository(EcommerceContext Context, IProductMapping iproductMapping)
         {
             _Context = Context;
+            _IProductMapping = iproductMapping;
         }
 
         public async Task<int> DeleteProductRepositoryAsync(int IDProduct)
@@ -99,9 +102,14 @@ namespace Ecommerce.DataAccess.Repositories
             return ProductQuery;
         }
 
-        public Task<int> CreateProductRepositoryAsync(ProductModel Product)
+        public async Task<int> CreateProductRepositoryAsync(ProductModel _ProductModel)
         {
-            throw new NotImplementedException();
+            var _ProductMapping = _IProductMapping.CreateProduitProductCoreToDataAccess(_ProductModel);
+
+            var result = 0;
+            await _Context.Product.AddAsync(_ProductMapping).ConfigureAwait(false);
+            result = await _Context.SaveChangesAsync().ConfigureAwait(false);
+            return result;
         }
 
         public Task<int> UpdateProductRepositoryAsync(int IDProduct, ProductModel Product)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Ecommerce.Api.Mapper.Interface;
+using Microsoft.AspNetCore.Mvc; 
 
 using Ecommerce.Core.Interfaces;
 using Ecommerce.Core.Transverse;
@@ -101,7 +100,7 @@ namespace Ecommerce.Api.Controllers
                 return NotFound(idProduct);
             }
 
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>
@@ -130,6 +129,19 @@ namespace Ecommerce.Api.Controllers
 
         }
 
+        [HttpPost("CreateProducts")] 
+        [ProducesResponseType(typeof(IEnumerable<ProductApi>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> CreateProducts([FromBody] ProductApi productApi)
+        {
+            
+            var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
+            
+            var result = await _ProductService.CreateProductServiceAsync(ProductModelMapped);
+            return Ok(result);
+
+        }
 
     }
 }
