@@ -16,6 +16,7 @@ namespace Ecommerce.Core.Interfaces
         Task<IEnumerable<ProductModel>> FindByNameProductServiceAsync(string Name);
         Task<int> CreateProductServiceAsync(ProductModel _ProductModel);
         Task<ProductModel> FindByIdProductServiceAsync(int ProductID);
+        Task<int> UpdateProductServiceAsync(int ProductID, ProductModel _ProductModel);
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
 
 using Ecommerce.Core.Interfaces;
 using Ecommerce.Core.Transverse;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using Ecommerce.Core.Model;
 using AutoMapper;
 using Ecommerce.Api.Model;
@@ -35,7 +35,7 @@ namespace Ecommerce.Api.Controllers
             _ProductInterface = productInterface;
         }
 
-        
+
         [HttpGet("ViewAllProducts")]
         //[Authorize(Policy = "AllowAll")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
@@ -56,7 +56,7 @@ namespace Ecommerce.Api.Controllers
 
         }
 
- 
+
         [HttpGet("UpdateProductSelected")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -94,7 +94,7 @@ namespace Ecommerce.Api.Controllers
             return Ok(result);
         }
 
-        
+
         [HttpGet("FindProductsByName")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -116,15 +116,15 @@ namespace Ecommerce.Api.Controllers
 
         }
 
-        [HttpPost("CreateProducts")] 
+        [HttpPost("CreateProducts")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateProducts([FromBody] ProductApi productApi)
         {
-            
+
             var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
-            
+
             var result = await _ProductService.CreateProductServiceAsync(ProductModelMapped);
             return Ok(result);
 
@@ -145,10 +145,31 @@ namespace Ecommerce.Api.Controllers
             {
                 return NoContent();
             }
-            var ProductMapped = _ProductInterface.FindByIdProductModelToApiProductMap(Response);
+            var result = _ProductInterface.FindByIdProductModelToApiProductMap(Response);
 
-            return Ok(ProductMapped);
+            return Ok(result);
 
         }
+
+        [HttpPut("UpdateProductAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> UpdateProductAsync([Required, FromQuery] int _ProductID, [FromBody] ProductApi _ProductApi)
+        {
+            if (_ProductID<0 || _ProductApi == null)
+            {
+                return BadRequest();
+            }
+
+            var ProductModelMapped = _ProductInterface.UpdateProduitProductApiToModelProductMap(_ProductApi);
+            var result = await _ProductService.UpdateProductServiceAsync(_ProductID, ProductModelMapped);
+
+          return  Ok(result);
+        }
+
+
+
     }
 }

@@ -47,5 +47,10 @@ namespace Ecommerce.Core.Services
         {
             return await _productRepository.FindByIdProductRepositoryAsync(ProductID);
         }
+
+        public async Task<int> UpdateProductServiceAsync(int ProductID, ProductModel _ProductModel)
+        {
+            return await _productRepository.UpdateProductRepositoryAsync(ProductID, _ProductModel);
+        }
     }
 }

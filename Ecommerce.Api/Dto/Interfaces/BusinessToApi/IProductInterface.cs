@@ -17,6 +17,10 @@ namespace Ecommerce.Api.Dto.Interfaces.BusinessToApi
         IEnumerable<ProductApi> FindByNameProductModelToApiProductMap(IEnumerable<ProductModel> ProductService);
         ProductModel CreateProduitProductApiToModelProductMap(ProductApi _ProductApi);
         ProductApi FindByIdProductModelToApiProductMap(ProductModel ProductService);
+        ProductModel UpdateProduitProductApiToModelProductMap(ProductApi _ProductApi);
+
+
+        
 
 
 

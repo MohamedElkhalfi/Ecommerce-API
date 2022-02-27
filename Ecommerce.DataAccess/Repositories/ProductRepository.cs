@@ -133,9 +133,18 @@ namespace Ecommerce.DataAccess.Repositories
             return result;
         }
 
-        public Task<int> UpdateProductRepositoryAsync(int ProductID, ProductModel Product)
+        public async Task<int> UpdateProductRepositoryAsync(int _ProductID, ProductModel _ProductModel)
         {
-            throw new NotImplementedException();
+            var _ProductMapping = _IProductMapping.CreateProduitProductCoreToDataAccess(_ProductModel);
+            var _ProductDb = _Context.Product.Where(x => x.ID.Equals(_ProductID)).Select(x=>x).FirstOrDefault();
+            var result = 0;
+            if(_ProductDb != null)
+            {
+                _Context.Product.Update(_ProductMapping);
+                result = await _Context.SaveChangesAsync().ConfigureAwait(false);
+            }
+       
+            return result;
         }
 
         public async Task<IEnumerable<ProductModel>> UpdateProductSelectedRepositoryAsync(int ProductID, bool? Selected)
