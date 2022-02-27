@@ -13,3 +13,7 @@
      "Microsoft.AspNetCore.Mvc" Version="2.2.0"  
      "Microsoft.EntityFrameworkCore.Design" Version="5.0.0"  
      "Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0"        
+
+
+# Azure pipline 
+https://dev.azure.com/Ecommerce03011989/Ecommerce/_build
