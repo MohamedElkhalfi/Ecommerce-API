@@ -37,10 +37,10 @@ namespace Ecommerce.Api
         {
             services.AddControllers();
             services.AddCors(o => {
-                o.AddPolicy("AllowAll", builder =>
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
+                o.AddPolicy("MohamedOrganization", builder =>
+                builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                     .WithOrigins("MohamedOrganization"));
             });
             SetUpMvcConfiguration(services);
             SetUpDataBase(services);
@@ -66,7 +66,7 @@ namespace Ecommerce.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseCors("AllowAll");
+            app.UseCors("MohamedOrganization");
             app.UseRouting();
 
             app.UseAuthorization();
@@ -85,7 +85,7 @@ namespace Ecommerce.Api
         public virtual void SetUpDataBase(IServiceCollection services)
         {
             services.AddDbContext<DACnxDb.EcommerceContext>(options => 
-                                    options.UseSqlServer(Configuration.GetConnectionString("coffContext"))); 
+                                    options.UseSqlServer(Configuration.GetConnectionString("EcoContext"))); 
         }
     }
 }

@@ -15,12 +15,15 @@ using Ecommerce.Api.Model;
 using Ecommerce.Api.Dto.Interfaces.BusinessToApi;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Cors;
 
 namespace Ecommerce.Api.Controllers
 {
     [Route("api")]
     [ApiController]
     [Produces("application/json")]
+    [EnableCors("MohamedOrganization")]
+
     public class ProductController : Controller
     {
 
@@ -37,7 +40,7 @@ namespace Ecommerce.Api.Controllers
 
 
         [HttpGet("ViewAllProducts")]
-        //[Authorize(Policy = "AllowAll")]
+        //[Authorize(Policy = "MohamedOrganization")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
