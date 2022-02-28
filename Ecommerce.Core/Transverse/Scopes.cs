@@ -8,7 +8,7 @@ namespace Ecommerce.Core.Transverse
 {
     public static class Scopes
     {
-        public const string COMMERCIAL_OFFER_DFC = "DFC";
-        public const string COMMERCIAL_OFFER_DG = "DG";
+        public const string DFC = "DFC";
+        public const string DG = "DG";
     }
 }
