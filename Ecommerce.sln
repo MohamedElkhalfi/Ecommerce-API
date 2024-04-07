@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Core", "Ecommerce.Core\Ecommerce.Core.csproj", "{E751800D-1587-4F76-BB96-0A9677E5D15F}"
 EndProject
@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Api", "Ecommerce.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.DataAccess", "Ecommerce.DataAccess\Ecommerce.DataAccess.csproj", "{230C8BE0-84AA-4C6A-9E68-FB7134F4BDFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.UnitTest", "Ecommerce.UnitTest\Ecommerce.UnitTest.csproj", "{41D1DC55-C1C7-4A82-B5DB-C1A03448E15C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.UnitTest", "Ecommerce.UnitTest\Ecommerce.UnitTest.csproj", "{41D1DC55-C1C7-4A82-B5DB-C1A03448E15C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.BDD", "Ecommerce.BDD\Ecommerce.BDD.csproj", "{D3AF702E-3802-482D-BC64-3C6C6ABB74F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{41D1DC55-C1C7-4A82-B5DB-C1A03448E15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41D1DC55-C1C7-4A82-B5DB-C1A03448E15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41D1DC55-C1C7-4A82-B5DB-C1A03448E15C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3AF702E-3802-482D-BC64-3C6C6ABB74F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3AF702E-3802-482D-BC64-3C6C6ABB74F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3AF702E-3802-482D-BC64-3C6C6ABB74F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3AF702E-3802-482D-BC64-3C6C6ABB74F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

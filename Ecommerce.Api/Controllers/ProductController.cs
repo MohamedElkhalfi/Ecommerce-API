@@ -22,7 +22,7 @@ namespace Ecommerce.Api.Controllers
     [Route("api")]
     [ApiController]
     [Produces("application/json")]
-    [EnableCors("MohamedOrganization")]
+    //[EnableCors("MohamedOrganization")]
 
     public class ProductController : Controller
     {

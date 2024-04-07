@@ -35,12 +35,16 @@ namespace Ecommerce.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddCors(o => {
-                o.AddPolicy("MohamedOrganization", builder =>
-                builder.AllowAnyMethod()
-                    .AllowAnyHeader()
-                     .WithOrigins("MohamedOrganization"));
+            // Ajoutez le support CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOriginPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin() // Autoriser toutes les origines
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
             });
             SetUpMvcConfiguration(services);
             SetUpDataBase(services);
@@ -66,9 +70,16 @@ namespace Ecommerce.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseCors("MohamedOrganization");
+            // Utilisez le middleware CORS
+            // Middleware CORS - Placez-le entre UseRouting() et UseEndpoints()
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseRouting();
 
+          
+
+            app.UseAuthentication();
+            app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
