@@ -16,6 +16,8 @@ using Ecommerce.Api.Dto.Interfaces.BusinessToApi;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Cors;
+using Ecommerce.Api.Errors;
+using Microsoft.Extensions.Logging;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -31,6 +33,7 @@ namespace Ecommerce.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IProductService _ProductService;
         private readonly IProductInterface _ProductInterface;
+        private readonly ILogger<ExceptionMiddleware> _logger;
         public ProductController(IProductService productService, IMapper mapper = null, IProductInterface productInterface = null)
         {
             _ProductService = productService;
