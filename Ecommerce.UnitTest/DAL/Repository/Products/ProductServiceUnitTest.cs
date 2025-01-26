@@ -143,7 +143,9 @@ namespace Ecommerce.UnitTest.Core.Services
 
             // Assert
             result.Should().Be(1);
-            mockRepository.Verify(repo => repo.CreateProductRepositoryAsync(newProduct), Times.Once);
+            mockRepository.Verify(repo => repo.CreateProductRepositoryAsync(newProduct), Times.Once());
+         
+
         }
 
         [Fact]

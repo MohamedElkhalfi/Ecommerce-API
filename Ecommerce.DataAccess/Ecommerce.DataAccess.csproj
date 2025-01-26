@@ -1,43 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
 
- <ItemGroup>
-    <PackageReference Include="EntityFrameworkCore.SqlServerCompact40" Version="2.2.0.7" />
-    <PackageReference Include="FluentAssertions" Version="6.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.6" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeCoverage" Version="16.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+	<ItemGroup>
+		<None Remove="global.json" />
+	</ItemGroup>
 
-	 <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Moq" Version="4.13.1" /> 
-    <PackageReference Include="SQLite.Native" Version="3.12.3" /> 
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.Json" Version="4.7.1" />
-	 <PackageReference Include="Polly" Version="7.2.0" />
- 
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="ModelCustom\" />
-    <Folder Include="Transverse\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Core\Ecommerce.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="global.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Entity Framework Core version 7 (compatible avec .NET 8.0) -->
+		<PackageReference Include="log4net" Version="2.0.15" />
+		<PackageReference Include="Polly" Version="7.2.3" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<!-- Autres packages sans version spécifique ou avec version compatible -->
+		<PackageReference Include="FluentAssertions" Version="6.11.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+		<PackageReference Include="Microsoft.CodeCoverage" Version="17.7.3" />
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="SQLite.Native" />
+		<PackageReference Include="System.Net.Http" />
+		<PackageReference Include="System.Text.Json" />
+		<PackageReference Include="Polly" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" />
+		<PackageReference Include="Newtonsoft.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="System.Net.Http" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Interfaces\" />
+		<Folder Include="Migrations\" />
+		<Folder Include="ModelCustom\" />
+		<Folder Include="Transverse\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ecommerce.Core\Ecommerce.Core.csproj" />
+	</ItemGroup>
+
 </Project>

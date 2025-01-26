@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using Ecommerce.Core.Interfaces;
 using Ecommerce.Core.Transverse;
 using System;
@@ -18,6 +17,13 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Cors;
 using Ecommerce.Api.Errors;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Retry;
+using log4net;
+using log4net.Config;
+using log4net.Repository;
+using System.Reflection;
+using System.IO;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -25,22 +31,31 @@ namespace Ecommerce.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     //[EnableCors("MohamedOrganization")]
-
     public class ProductController : Controller
     {
-
-
         private readonly IMapper _mapper;
         private readonly IProductService _ProductService;
         private readonly IProductInterface _ProductInterface;
-        private readonly ILogger<ExceptionMiddleware> _logger;
-        public ProductController(IProductService productService, IMapper mapper = null, IProductInterface productInterface = null)
+        private readonly ILogger<ProductController> _logger;
+        private readonly AsyncRetryPolicy _retryPolicy;
+
+        // Injection des dépendances et configuration du logger et de Polly
+        public ProductController(IProductService productService, IMapper mapper = null, IProductInterface productInterface = null, ILogger<ProductController> logger = null)
         {
             _ProductService = productService;
             _mapper = mapper;
             _ProductInterface = productInterface;
-        }
+            _logger = logger;
 
+            // Configuration de Polly pour les retries
+            _retryPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        _logger?.LogWarning($"[Retry Attempt {retryCount}] Waiting {timeSpan.TotalSeconds} seconds before retry. Exception: {exception.Message}");
+                    });
+        }
 
         [HttpGet("ViewAllProducts")]
         //[Authorize(Policy = "MohamedOrganization")]
@@ -50,40 +65,55 @@ namespace Ecommerce.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> ViewAllProducts()
         {
-
-
-            var productResponse = await _ProductService.ViewAllProductsServiceAsync(); ;
-            if (productResponse == null || !productResponse.Any())
+            try
             {
-                return NoContent();
+                _logger?.LogInformation("Début de la récupération de tous les produits.");
+
+                var productResponse = await _retryPolicy.ExecuteAsync(() => _ProductService.ViewAllProductsServiceAsync());
+                if (productResponse == null || !productResponse.Any())
+                {
+                    _logger?.LogWarning("Aucun produit trouvé.");
+                    return NoContent();
+                }
+
+                var ProductMapped = _ProductInterface.ViewAllProductsMap(productResponse);
+                return Ok(ProductMapped);
             }
-            var ProductMapped = _ProductInterface.ViewAllProductsMap(productResponse);
-            return Ok(ProductMapped);
-
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erreur lors de la récupération des produits.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
+            }
         }
-
 
         [HttpGet("UpdateProductSelected")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
-
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> UpdateProductSelected([Required, FromQuery] int idProduct, [Required, FromQuery] bool? selected)
         {
-
-
-            var Response = await _ProductService.UpdateProductSelectedServiceAsync(idProduct, selected);
-            if (Response == null)
+            try
             {
-                return NoContent();
+                _logger?.LogInformation($"Mise à jour de la sélection du produit avec l'ID {idProduct}.");
+                var Response = await _retryPolicy.ExecuteAsync(() => _ProductService.UpdateProductSelectedServiceAsync(idProduct, selected));
+
+                if (Response == null)
+                {
+                    _logger?.LogWarning($"Produit avec ID {idProduct} non trouvé.");
+                    return NoContent();
+                }
+
+                var ProductMapped = _ProductInterface.UpdateProductSelectedModelToApiProductMap(Response);
+                return Ok(ProductMapped);
             }
-            var ProductMapped = _ProductInterface.UpdateProductSelectedModelToApiProductMap(Response);
-
-            return Ok(ProductMapped);
-
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erreur lors de la mise à jour du produit sélectionné.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
+            }
         }
 
         [HttpDelete("DeleteProductAsync")]
@@ -91,35 +121,23 @@ namespace Ecommerce.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteProductAsync([Required, FromQuery] int idProduct)
         {
-            var result = await _ProductService.DeleteProductServiceAsync(idProduct);
-            if (result <= 0)
+            try
             {
-                return NotFound(idProduct);
+                _logger?.LogInformation($"Tentative de suppression du produit avec l'ID {idProduct}.");
+                var result = await _retryPolicy.ExecuteAsync(() => _ProductService.DeleteProductServiceAsync(idProduct));
+                if (result <= 0)
+                {
+                    _logger?.LogWarning($"Produit avec l'ID {idProduct} non trouvé.");
+                    return NotFound(idProduct);
+                }
+
+                return Ok(result);
             }
-
-            return Ok(result);
-        }
-
-
-        [HttpGet("FindProductsByName")]
-        //[Authorize(Policy = "AllowAll")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
-
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> FindProductsByName([Required, FromQuery] string KeyWord)
-        {
-            var Response = await _ProductService.FindByNameProductServiceAsync(KeyWord);
-            if (Response == null)
+            catch (Exception ex)
             {
-                return NoContent();
+                _logger?.LogError(ex, "Erreur lors de la suppression du produit.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
             }
-            var ProductMapped = _ProductInterface.FindByNameProductModelToApiProductMap(Response);
-
-            return Ok(ProductMapped);
-
         }
 
         [HttpPost("CreateProducts")]
@@ -128,33 +146,48 @@ namespace Ecommerce.Api.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateProducts([FromBody] ProductApi productApi)
         {
-
-            var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
-
-            var result = await _ProductService.CreateProductServiceAsync(ProductModelMapped);
-            return Ok(result);
-
+            try
+            {
+                _logger?.LogInformation("Tentative de création d'un nouveau produit.");
+                var ProductModelMapped = _ProductInterface.CreateProduitProductApiToModelProductMap(productApi);
+                var result = await _retryPolicy.ExecuteAsync(() => _ProductService.CreateProductServiceAsync(ProductModelMapped));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erreur lors de la création du produit.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
+            }
         }
 
         [HttpGet("FindProductsByIdAsync")]
         //[Authorize(Policy = "AllowAll")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ProductApi), (int)HttpStatusCode.OK)]
-
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> FindProductsByIdAsync([Required, FromQuery] int ProductID)
         {
-            var Response = await _ProductService.FindByIdProductServiceAsync(ProductID);
-            if (Response == null)
+            try
             {
-                return NoContent();
+                _logger?.LogInformation($"Recherche du produit avec l'ID {ProductID}.");
+                var Response = await _retryPolicy.ExecuteAsync(() => _ProductService.FindByIdProductServiceAsync(ProductID));
+
+                if (Response == null)
+                {
+                    _logger?.LogWarning($"Produit avec l'ID {ProductID} non trouvé.");
+                    return NoContent();
+                }
+
+                var result = _ProductInterface.FindByIdProductModelToApiProductMap(Response);
+                return Ok(result);
             }
-            var result = _ProductInterface.FindByIdProductModelToApiProductMap(Response);
-
-            return Ok(result);
-
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erreur lors de la recherche du produit par ID.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
+            }
         }
 
         [HttpPut("UpdateProductAsync")]
@@ -164,18 +197,24 @@ namespace Ecommerce.Api.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateProductAsync([Required, FromQuery] int _ProductID, [FromBody] ProductApi _ProductApi)
         {
-            if (_ProductID<0 || _ProductApi == null)
+            try
             {
-                return BadRequest();
+                if (_ProductID < 0 || _ProductApi == null)
+                {
+                    return BadRequest();
+                }
+
+                _logger?.LogInformation($"Mise à jour du produit avec l'ID {_ProductID}.");
+                var ProductModelMapped = _ProductInterface.UpdateProduitProductApiToModelProductMap(_ProductApi);
+                var result = await _retryPolicy.ExecuteAsync(() => _ProductService.UpdateProductServiceAsync(_ProductID, ProductModelMapped));
+
+                return Ok(result);
             }
-
-            var ProductModelMapped = _ProductInterface.UpdateProduitProductApiToModelProductMap(_ProductApi);
-            var result = await _ProductService.UpdateProductServiceAsync(_ProductID, ProductModelMapped);
-
-          return  Ok(result);
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Erreur lors de la mise à jour du produit.");
+                return StatusCode(500, new { message = "Erreur interne du serveur" });
+            }
         }
-
-
-
     }
 }

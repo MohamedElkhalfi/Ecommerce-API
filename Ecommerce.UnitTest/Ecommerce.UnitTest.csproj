@@ -1,36 +1,52 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+	<ItemGroup>
+		<None Remove="global.json" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="global.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<ItemGroup>
+		<!-- Suppression des versions dans les PackageReference -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" />
+		<PackageReference Include="Moq" Version="4.18.2" />
 
-  <ItemGroup>
-	  <PackageReference Include="EntityFrameworkCore.SqlServerCompact40" Version="2.2.0.7" />
-	  <PackageReference Include="Moq" Version="4.17.1" />
-	  <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
-	  <PackageReference Include="xunit" Version="2.4.1" />
-	  <PackageReference Include="xunit.analyzers" Version="1.11.0" />
-	  <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
-	  <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.0.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" />
+ 
+		<PackageReference Include="System.Configuration.ConfigurationManager" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.analyzers" />
+		<PackageReference Include="xunit.runner.utility" />
+		<PackageReference Include="xunit.runner.visualstudio">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<!-- Suppression de la version pour System.Text.Json -->
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Core\Ecommerce.Core.csproj" />
-    <ProjectReference Include="..\Ecommerce.DataAccess\Ecommerce.DataAccess.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Ecommerce.Core\Ecommerce.Core.csproj" />
+		<ProjectReference Include="..\Ecommerce.DataAccess\Ecommerce.DataAccess.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Folder Include="Controllers\" />
+	</ItemGroup>
 </Project>

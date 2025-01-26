@@ -1,18 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc; 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
+using log4net;
+using log4net.Config;
 using Microsoft.EntityFrameworkCore;
-using DACnxDb = Ecommerce.DataAccess.ConnexionDB;
 using Ecommerce.Core.Interfaces;
 using Ecommerce.DataAccess.Repositories;
 using Ecommerce.Core.Services;
@@ -28,38 +24,48 @@ namespace Ecommerce.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            // Configuration de log4net
+            ConfigureLog4Net();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private void ConfigureLog4Net()
+        {
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            // Ajoutez le support CORS
+            // Configuration de CORS en utilisant un tableau d'origines
+            var allowedOrigins = Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAnyOriginPolicy",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin() // Autoriser toutes les origines
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
+                options.AddPolicy("AllowSpecificOrigin", builder =>
+                {
+                    builder.WithOrigins(allowedOrigins) // Utilisation d'un tableau d'origines
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
             });
+
             SetUpMvcConfiguration(services);
             SetUpDataBase(services);
+
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductInterface, ProductApiMap>();
             services.AddScoped<IProductMapping, ProductMapping>();
 
+            // Configuration de Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce.Api", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -70,16 +76,12 @@ namespace Ecommerce.Api
             }
 
             app.UseHttpsRedirection();
-            // Utilisez le middleware CORS
-            // Middleware CORS - Placez-le entre UseRouting() et UseEndpoints()
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseCors("AllowSpecificOrigin"); // Appliquer la politique CORS configurée
 
             app.UseRouting();
-
-          
 
             app.UseAuthentication();
-            app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -90,13 +92,13 @@ namespace Ecommerce.Api
 
         public virtual void SetUpMvcConfiguration(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllers();
         }
 
         public virtual void SetUpDataBase(IServiceCollection services)
         {
-            services.AddDbContext<DACnxDb.EcommerceContext>(options => 
-                                    options.UseSqlServer(Configuration.GetConnectionString("EcoContext"))); 
+            services.AddDbContext<Ecommerce.DataAccess.ConnexionDB.EcommerceContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("EcoContext")));
         }
     }
 }
