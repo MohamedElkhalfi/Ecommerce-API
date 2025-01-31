@@ -24,6 +24,7 @@ namespace Ecommerce.DataAccess.ConnexionDB
         public EcommerceContext()
         {
            
+            
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory()) // Définit le répertoire de base
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Charge le fichier principal
@@ -40,6 +41,8 @@ namespace Ecommerce.DataAccess.ConnexionDB
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

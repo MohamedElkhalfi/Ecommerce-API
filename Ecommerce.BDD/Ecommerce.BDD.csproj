@@ -41,6 +41,8 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Text.Json" Version="8.0.0" />
 		<PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
+
+	 
 	</ItemGroup>
 
 	<ItemGroup>

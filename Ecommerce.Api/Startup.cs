@@ -16,6 +16,11 @@ using Ecommerce.Api.Dto.Interfaces.BusinessToApi;
 using Ecommerce.Api.Dto.Mapping;
 using Ecommerce.DataAccess.Dto.Mapping;
 using Ecommerce.DataAccess.Dto.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using AutoMapper;
+
 
 namespace Ecommerce.Api
 {
@@ -58,12 +63,40 @@ namespace Ecommerce.Api
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductInterface, ProductApiMap>();
             services.AddScoped<IProductMapping, ProductMapping>();
+            services.AddScoped<IAuthService, AuthService>();
+
 
             // Configuration de Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce.Api", Version = "v1" });
             });
+
+            services.AddAutoMapper(typeof(UserMappingProfile).Assembly); // Enregistre AutoMapper
+
+            // Configure JWT authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
+
+            // Configure authorization policies
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

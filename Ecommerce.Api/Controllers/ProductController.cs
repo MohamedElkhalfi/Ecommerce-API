@@ -58,7 +58,8 @@ namespace Ecommerce.Api.Controllers
         }
 
         [HttpGet("ViewAllProducts")]
-        //[Authorize(Policy = "MohamedOrganization")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
@@ -87,7 +88,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         [HttpGet("UpdateProductSelected")]
-        //[Authorize(Policy = "AllowAll")]
+        [Authorize(Policy = "AdminPolicy")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -116,6 +117,7 @@ namespace Ecommerce.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminPolicy")]
         [HttpDelete("DeleteProductAsync")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -140,6 +142,7 @@ namespace Ecommerce.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminPolicy")]
         [HttpPost("CreateProducts")]
         [ProducesResponseType(typeof(IEnumerable<ProductApi>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -161,7 +164,8 @@ namespace Ecommerce.Api.Controllers
         }
 
         [HttpGet("FindProductsByIdAsync")]
-        //[Authorize(Policy = "AllowAll")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ProductApi), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -191,6 +195,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         [HttpPut("UpdateProductAsync")]
+        [Authorize(Policy = "AdminPolicy")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
